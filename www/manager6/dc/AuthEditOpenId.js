@@ -104,8 +104,7 @@ Ext.define('PVE.panel.OpenIDInputPanel', {
 				{
 					xtype: 'proxmoxtextfield',
 					fieldLabel: gettext('Groups Filter'),
-					name: 'remove-vanished-acl',
-					boxLabel: gettext('TEST'),
+					name: 'groups-filter',
 					deleteEmpty: true,
 					submitEmpty: false,
 					cbind: {
