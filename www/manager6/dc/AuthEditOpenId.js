@@ -43,15 +43,7 @@ Ext.define('PVE.panel.OpenIDInputPanel', {
     ],
 
     column2: [
-	{
-	    xtype: 'proxmoxcheckbox',
-	    fieldLabel: gettext('Autocreate Users'),
-	    name: 'autocreate',
-	    value: 0,
-	    cbind: {
-		deleteEmpty: '{!isCreate}',
-	    },
-	},
+	
 	{
 	    xtype: 'pmxDisplayEditField',
 	    name: 'username-claim',
@@ -82,6 +74,7 @@ Ext.define('PVE.panel.OpenIDInputPanel', {
 		deleteEmpty: '{!isCreate}',
 	    },
 	},
+	
 	{
 	    xtype: 'proxmoxKVComboBox',
 	    name: 'prompt',
@@ -101,6 +94,42 @@ Ext.define('PVE.panel.OpenIDInputPanel', {
 	},
     ],
 
+	columnB: [
+		{
+			xtype: 'fieldset',
+			title: gettext('Options for OpenID Connect'),
+			items: [
+		// sync option with filter group option for openid connect, so we can use the same
+				
+				{
+					xtype: 'proxmoxtextfield',
+					fieldLabel: gettext('Groups Filter'),
+					name: 'remove-vanished-acl',
+					boxLabel: gettext('TEST'),
+					deleteEmpty: true,
+					submitEmpty: false,
+					cbind: {
+						deleteEmpty: '{!isCreate}',
+					},
+				},
+				{
+					xtype: 'proxmoxcheckbox',
+					fieldLabel: gettext('Autocreate Users'),
+					name: 'autocreate',
+					boxLabel: gettext('Create User if not exists Automatically'),
+				},
+				{
+					xtype: 'proxmoxcheckbox',
+					fieldLabel: gettext('Auto Sync Groups'),
+					name: 'autocreate-groups',
+					boxLabel: gettext('Create and Sync Groups Automatically'),
+				},
+				
+				],
+				
+			
+		},	
+		],
     advancedColumnB: [
 	{
 	    xtype: 'proxmoxtextfield',
@@ -123,4 +152,3 @@ Ext.define('PVE.panel.OpenIDInputPanel', {
 	me.callParent();
     },
 });
-
