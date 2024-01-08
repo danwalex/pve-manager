@@ -6,14 +6,32 @@ Ext.define('PVE.panel.OpenIDInputPanel', {
     onGetValues: function(values) {
 	let me = this;
 
+	if (values['client-key'] === gettext('Unchanged')) {
+        delete values['client-key'];
+    }
 	if (!values.verify) {
 	    if (!me.isCreate) {
-		Proxmox.Utils.assemble_field_data(values, { 'delete': 'verify' });
+			if (values['client-key'] === gettext('Unchanged')) {
+				delete values['client-key'];
+			}else{
+			Proxmox.Utils.assemble_field_data(values, { 'delete': 'verify' });
+			}
 	    }
 	    delete values.verify;
+		
 	}
-
+	
 	return me.callParent([values]);
+    },
+	setValues: function(values) {
+        let me = this;
+
+        // Définir "Unchanged" pour client-key uniquement en mode édition
+        if (!me.isCreate && values['client-key']) {
+            values['client-key'] = undefined;
+        }
+
+        return me.callParent([values]);
     },
 
     columnT: [
@@ -33,12 +51,13 @@ Ext.define('PVE.panel.OpenIDInputPanel', {
 	    allowBlank: false,
 	},
 	{
-	    xtype: 'proxmoxtextfield',
-	    fieldLabel: gettext('Client Key'),
-	    cbind: {
-		deleteEmpty: '{!isCreate}',
-	    },
-	    name: 'client-key',
+		xtype: 'proxmoxtextfield',
+		fieldLabel: gettext('Client Key'),
+		emptyText: gettext('Unchanged'),
+		cbind: {
+			deleteEmpty: '{!isCreate}',
+		},
+		name: 'client-key',
 	},
     ],
 
