@@ -6,14 +6,32 @@ Ext.define('PVE.panel.OpenIDInputPanel', {
     onGetValues: function(values) {
 	let me = this;
 
+	if (values['client-key'] === gettext('Unchanged')) {
+        delete values['client-key'];
+    }
 	if (!values.verify) {
 	    if (!me.isCreate) {
-		Proxmox.Utils.assemble_field_data(values, { 'delete': 'verify' });
+			if (values['client-key'] === gettext('Unchanged')) {
+				delete values['client-key'];
+			}else{
+			Proxmox.Utils.assemble_field_data(values, { 'delete': 'verify' });
+			}
 	    }
 	    delete values.verify;
+		
 	}
-
+	
 	return me.callParent([values]);
+    },
+	setValues: function(values) {
+        let me = this;
+
+        // Définir "Unchanged" pour client-key uniquement en mode édition
+        if (!me.isCreate && values['client-key']) {
+            values['client-key'] = undefined;
+        }
+
+        return me.callParent([values]);
     },
 
     columnT: [
@@ -33,25 +51,18 @@ Ext.define('PVE.panel.OpenIDInputPanel', {
 	    allowBlank: false,
 	},
 	{
-	    xtype: 'proxmoxtextfield',
-	    fieldLabel: gettext('Client Key'),
-	    cbind: {
-		deleteEmpty: '{!isCreate}',
-	    },
-	    name: 'client-key',
+		xtype: 'proxmoxtextfield',
+		fieldLabel: gettext('Client Key'),
+		emptyText: gettext('Unchanged'),
+		cbind: {
+			deleteEmpty: '{!isCreate}',
+		},
+		name: 'client-key',
 	},
     ],
 
     column2: [
-	{
-	    xtype: 'proxmoxcheckbox',
-	    fieldLabel: gettext('Autocreate Users'),
-	    name: 'autocreate',
-	    value: 0,
-	    cbind: {
-		deleteEmpty: '{!isCreate}',
-	    },
-	},
+	
 	{
 	    xtype: 'pmxDisplayEditField',
 	    name: 'username-claim',
@@ -82,6 +93,7 @@ Ext.define('PVE.panel.OpenIDInputPanel', {
 		deleteEmpty: '{!isCreate}',
 	    },
 	},
+	
 	{
 	    xtype: 'proxmoxKVComboBox',
 	    name: 'prompt',
@@ -101,6 +113,41 @@ Ext.define('PVE.panel.OpenIDInputPanel', {
 	},
     ],
 
+	columnB: [
+		{
+			xtype: 'fieldset',
+			title: gettext('Options for OpenID Connect'),
+			items: [
+		// sync option with filter group option for openid connect, so we can use the same
+				
+				{
+					xtype: 'proxmoxtextfield',
+					fieldLabel: gettext('Groups Filter'),
+					name: 'groups-filter',
+					deleteEmpty: true,
+					submitEmpty: false,
+					cbind: {
+						deleteEmpty: '{!isCreate}',
+					},
+				},
+				{
+					xtype: 'proxmoxcheckbox',
+					fieldLabel: gettext('Autocreate Users'),
+					name: 'autocreate',
+					boxLabel: gettext('Create User if not exists Automatically'),
+				},
+				{
+					xtype: 'proxmoxcheckbox',
+					fieldLabel: gettext('Auto Sync Groups'),
+					name: 'autocreate-groups',
+					boxLabel: gettext('Create Groups Automatically'),
+				},
+				
+				],
+				
+			
+		},	
+		],
     advancedColumnB: [
 	{
 	    xtype: 'proxmoxtextfield',
@@ -123,4 +170,3 @@ Ext.define('PVE.panel.OpenIDInputPanel', {
 	me.callParent();
     },
 });
-
