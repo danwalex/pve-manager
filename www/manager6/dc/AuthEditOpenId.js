@@ -140,7 +140,7 @@ Ext.define('PVE.panel.OpenIDInputPanel', {
 					xtype: 'proxmoxcheckbox',
 					fieldLabel: gettext('Auto Sync Groups'),
 					name: 'autocreate-groups',
-					boxLabel: gettext('Create and Sync Groups Automatically'),
+					boxLabel: gettext('Create Groups Automatically'),
 				},
 				
 				],
